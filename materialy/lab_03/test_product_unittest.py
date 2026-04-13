@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""Testy unittest dla klasy Product -- uzupelnij metody testowe!
-
-Uruchomienie: python -m unittest test_product_unittest -v
-"""
-
 import unittest
 from product import Product
 
@@ -11,57 +5,52 @@ from product import Product
 class TestProduct(unittest.TestCase):
 
     def setUp(self):
-        """Przygotuj instancje Product do testow."""
-        # TODO: Stworz instancje Product, np. Product("Laptop", 2999.99, 10)
-        pass
-
-    # --- Testy add_stock ---
+        # Stworz instancje Product przed kazdym testem
+        self.product = Product("Laptop", 2999.99, 10)
 
     def test_add_stock_positive(self):
-        """Sprawdz, czy dodanie towaru zwieksza quantity."""
-        # TODO: Wywolaj add_stock i sprawdz nowa wartosc quantity
-        pass
+        # Wywolaj add_stock i sprawdz nowa wartosc quantity
+        self.product.add_stock(5)
+        self.assertEqual(self.product.quantity, 15)
 
     def test_add_stock_negative_raises(self):
-        """Sprawdz, czy ujemna wartosc rzuca ValueError."""
-        # TODO: Uzyj self.assertRaises(ValueError) i wywolaj add_stock z ujemna wartoscia
-        pass
-
-    # --- Testy remove_stock ---
+        # Uzyj self.assertRaises(ValueError)
+        with self.assertRaises(ValueError):
+            self.product.add_stock(-2)
 
     def test_remove_stock_positive(self):
-        """Sprawdz, czy usuniecie towaru zmniejsza quantity."""
-        # TODO: Wywolaj remove_stock i sprawdz nowa wartosc quantity
-        pass
+        # Wywolaj remove_stock i sprawdz quantity
+        self.product.remove_stock(3)
+        self.assertEqual(self.product.quantity, 7)
 
     def test_remove_stock_too_much_raises(self):
-        """Sprawdz, czy proba usuniecia wiecej niz jest dostepne rzuca ValueError."""
-        # TODO: Uzyj self.assertRaises(ValueError)
-        pass
+        # Uzyj self.assertRaises(ValueError)
+        with self.assertRaises(ValueError):
+            self.product.remove_stock(15)
 
     def test_remove_stock_negative_raises(self):
-        """Sprawdz, czy ujemna wartosc rzuca ValueError."""
-        # TODO: Uzyj self.assertRaises(ValueError)
-        pass
-
-    # --- Testy is_available ---
+        with self.assertRaises(ValueError):
+            self.product.remove_stock(-2)
 
     def test_is_available_when_in_stock(self):
-        """Sprawdz, czy produkt z quantity > 0 jest dostepny."""
-        # TODO: Uzyj self.assertTrue
-        pass
+        # Uzyj self.assertTrue
+        self.assertTrue(self.product.is_available())
 
     def test_is_not_available_when_empty(self):
-        """Sprawdz, czy produkt z quantity == 0 nie jest dostepny."""
-        # TODO: Stworz produkt z quantity=0 i uzyj self.assertFalse
-        pass
-
-    # --- Testy total_value ---
+        # Stworz produkt z quantity=0, uzyj self.assertFalse
+        empty_product = Product("Myszka", 49.99, 0)
+        self.assertFalse(empty_product.is_available())
 
     def test_total_value(self):
-        """Sprawdz, czy total_value zwraca price * quantity."""
-        # TODO: Uzyj self.assertEqual
-        pass
+        # Uzyj self.assertEqual
+        self.assertAlmostEqual(self.product.total_value(), 29999.90, places=2)
+
+    def test_init_invalid_values(self):
+        # Dodatkowo sprawdzam wartosci graniczne w __init__
+        with self.assertRaises(ValueError):
+            Product("Zepsuty", -10.0, 5)
+        with self.assertRaises(ValueError):
+            Product("Zepsuty", 10.0, -5)
 
 
 if __name__ == "__main__":
