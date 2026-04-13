@@ -44,3 +44,19 @@ def test_is_not_available_when_empty():
 def test_total_value(product):
     assert product.total_value() == pytest.approx(29999.90, 0.01)
 
+
+@pytest.mark.parametrize("percent, expected_price", [
+    (0, 100.0),
+    (50, 50.0),
+    (100, 0.0),
+])
+def test_apply_discount(product, percent, expected_price):
+    product.price = 100.0
+    product.apply_discount(percent)
+    assert product.price == expected_price
+
+
+@pytest.mark.parametrize("invalid_percent", [-10, 150])
+def test_apply_discount_invalid_raises(product, invalid_percent):
+    with pytest.raises(ValueError):
+        product.apply_discount(invalid_percent)
